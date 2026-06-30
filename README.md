@@ -37,10 +37,10 @@ The workflow performs the following steps:
 Trigger
     │
     ▼
-Generate/Retrieve Newsletter
+Add the URL of newsletter
     │
     ▼
-Format Email
+Read top 5 articles and summarise
     │
     ▼
 Send Gmail
