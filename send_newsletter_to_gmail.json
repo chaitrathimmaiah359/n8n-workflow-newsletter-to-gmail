@@ -1,0 +1,173 @@
+{
+  "name": "send_newsletter_to_gmail",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "51708007-050e-4805-bef8-8d8e0caeea4c",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b87135dd-4fd4-473f-b460-c20bfa66a7bf",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "8ee844c4-bcd6-4b06-b57f-314220a110f8",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI news editor.\n\nBelow are the latest AI news articles.\n\nFor each article provide:\n\nTitle\n\nOne sentence summary\n\nWhy it matters\n\nKeep the response concise.\n\nNews:\n\n{{ $json.content }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "498211c1-0b96-44af-b079-55444d8b1092",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "phi3:mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        496,
+        208
+      ],
+      "id": "4a2a2e0a-2fc2-4b9e-92f9-b8e413b69566",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "l9eMu43oQl6vgDj6",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "tchaitra144@gmail.com",
+        "subject": "Newsletter",
+        "message": "hi ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "5fac048b-6b16-4df1-8ada-50b681ad204b",
+      "name": "Send a message",
+      "webhookId": "2f9c3153-def2-4710-b120-36afb028232f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TwiJHwsR6Ojr6Dor",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cafcab41-8795-4116-9408-a97b67fa57f3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "82bdec12ad9631537ef77ce69d7e194807138a5e0427f4891b5ff74cee75dbe7"
+  },
+  "nodeGroups": [],
+  "id": "rezGR9ckoZ2u6nXS",
+  "tags": []
+}
